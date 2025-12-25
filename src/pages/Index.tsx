@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 import PizzaConstructor from '@/components/PizzaConstructor';
+import PromotionsSection from '@/components/PromotionsSection';
 
 interface Pizza {
   id: number;
@@ -249,6 +250,8 @@ export default function Index() {
           <PizzaConstructor onAddToCart={addToCart} />
         </div>
       </section>
+
+      <PromotionsSection onAddToCart={addToCart} />
 
       <section id="menu" className="py-20">
         <div className="container">
