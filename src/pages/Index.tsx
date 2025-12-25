@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
+import PizzaConstructor from '@/components/PizzaConstructor';
 
 interface Pizza {
   id: number;
@@ -82,15 +83,22 @@ export default function Index() {
 
   const categories = ['Все', 'Классические', 'Премиум', 'Острые'];
 
-  const addToCart = (pizza: Pizza) => {
+  const addToCart = (pizza: Pizza | { name: string; price: number; description: string }) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === pizza.id);
+      const pizzaWithDefaults = {
+        ...pizza,
+        id: 'id' in pizza ? pizza.id : Date.now(),
+        image: 'image' in pizza ? pizza.image : 'https://cdn.poehali.dev/projects/06836954-9279-408e-a4ea-edc380de1a21/files/9bd8b2a8-2724-427f-bd89-9699891ade68.jpg',
+        category: 'category' in pizza ? pizza.category : 'Своя'
+      } as Pizza;
+      
+      const existing = prev.find(item => item.id === pizzaWithDefaults.id);
       if (existing) {
         return prev.map(item =>
-          item.id === pizza.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === pizzaWithDefaults.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { ...pizza, quantity: 1 }];
+      return [...prev, { ...pizzaWithDefaults, quantity: 1 }];
     });
   };
 
@@ -231,11 +239,22 @@ export default function Index() {
         </div>
       </section>
 
+      <section id="constructor" className="py-20 bg-muted">
+        <div className="container">
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-5xl font-bold mb-4">Соберите свою пиццу</h2>
+            <p className="text-xl text-muted-foreground">Выбирайте ингредиенты по своему вкусу</p>
+          </div>
+          
+          <PizzaConstructor onAddToCart={addToCart} />
+        </div>
+      </section>
+
       <section id="menu" className="py-20">
         <div className="container">
           <div className="text-center mb-12 animate-fade-in">
-            <h2 className="text-5xl font-bold mb-4">Наше меню</h2>
-            <p className="text-xl text-muted-foreground">Выберите вашу идеальную пиццу</p>
+            <h2 className="text-5xl font-bold mb-4">Готовые пиццы</h2>
+            <p className="text-xl text-muted-foreground">Или выберите из нашего меню</p>
           </div>
 
           <div className="flex justify-center gap-2 mb-12 flex-wrap">
